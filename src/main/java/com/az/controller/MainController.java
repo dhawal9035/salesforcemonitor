@@ -61,6 +61,7 @@ public class MainController {
  		mainService.checkStatus();
 	}
 	
+	// This method is used to get the user data to show which instances have been subscribed
 	@RequestMapping(value="/getUserData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<NotificationModel> getUserData(){
 		return mainService.getUserData();
