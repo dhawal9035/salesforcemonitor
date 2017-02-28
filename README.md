@@ -18,4 +18,4 @@ The code that directly takes the API data is also there.
 
 MainService.java	contains the location to the data.json file. Please change it to point to your local directory. Also there is a code for accessing the API
 if you want to do that. Comments are written on which lines to comment and uncomment.
-InstanceModel[] instances = (InstanceModel[]) mapper.readValue(new File("C:/Users/Dhawal/Documents/workspace-sts-3.8.3.RELEASE/azchallenge/src/main/resources/data.json"), InstanceModel[].class);
+InstanceModel[] instances = (InstanceModel[]) mapper.readValue(new File("C:/Users/Dhawal/git/salesforcemonitor/src/main/resources/data.json"), InstanceModel[].class);
