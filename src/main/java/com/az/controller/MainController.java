@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -32,9 +33,12 @@ public class MainController {
 	@Autowired
 	MainService mainService;
 	
+	private static final Logger logger = Logger.getLogger(MainController.class);
+	
 	// This method is used to populate the Multiselect with all the instances 
 	@RequestMapping(value="/getInstances",  method=RequestMethod.GET)
 	public List<String> getInstanceDetails(){
+		logger.info("Retrieving all the instance name");
 		return mainService.getInstanceDetails();
 	}
 	
@@ -42,15 +46,18 @@ public class MainController {
 	@RequestMapping(value="/saveUserInfo",  method=RequestMethod.POST)
 	public RedirectView saveUserInfo(RedirectAttributes attribute, @RequestParam (value="firstName") String firstName, @RequestParam (value="lastName") String lastName,
 							 @RequestParam (value="email") String email, @RequestParam (value="instanceList") String[] selectedInstance, HttpServletResponse response){
-		 mainService.saveUserInfo(firstName, lastName, email, selectedInstance);
-		 attribute.addAttribute("Information Saved successfully", "success");
-		 return new RedirectView("index.html");
+		logger.info("Saving user info along with the database");
+		mainService.saveUserInfo(firstName, lastName, email, selectedInstance);
+		attribute.addAttribute("Information Saved successfully", "success");
+		logger.info("Successfully Saved");
+		return new RedirectView("index.html");
 		 
 	}
 	
 	// This method saves the instance data when the index.html page loads thus keeping all the information up to date.
 	@RequestMapping(value="/saveInstanceData", method = RequestMethod.POST)
 	public void saveInstanceData(@RequestBody InstanceModel[] apiData){
+		logger.info("Saving the api data into the database");
 		mainService.saveInstanceData(apiData);
 	}
 	
@@ -58,12 +65,14 @@ public class MainController {
 	// if the status is Not OK or if the status changed back to OK
 	@Scheduled(fixedRate=900000)
 	public void checkStatus() throws JsonParseException, JsonMappingException, IOException {
+		logger.info("Calling the scheduled method to check the status of the instances");
  		mainService.checkStatus();
 	}
 	
 	// This method is used to get the user data to show which instances have been subscribed
 	@RequestMapping(value="/getUserData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<NotificationModel> getUserData(){
+		logger.info("Retrieving the user data from DB");
 		return mainService.getUserData();
 		
 	}

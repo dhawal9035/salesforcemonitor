@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,6 +15,8 @@ public class EmailService {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+	
+	private static final Logger logger = Logger.getLogger(EmailService.class);
 
 	// Utilized Method Overloading to send different email messages. This method is for notifying when the status of any of the instance is not proper
 	public void sendMail(Map<String, List<String>> notificationMap) {
@@ -27,6 +30,7 @@ public class EmailService {
 			message.setText("Hello,\n\n The status of the instance "+entry.getKey()+" is NOT OK. It is currently being worked upon by the salesforce "
 					+ "team. We will notify you once the status changes." );
 			javaMailSender.send(message);
+			logger.info("Email sent to notify the users of status not being OK");
 		}
 		
 
@@ -42,6 +46,7 @@ public class EmailService {
 			message.setText("Hello,\n\n The status of the instance "+key+" is OK now. We are constantly monitoring it and we will let you know "
 					+ "if anything changes." );
 			javaMailSender.send(message);
+			logger.info("Email sent to notify the users of status being OK");
 	}
 
 	// This method is used to send successful registration method.
@@ -51,6 +56,7 @@ public class EmailService {
 		message.setSubject(subject);
 		message.setText(text);
 		javaMailSender.send(message);
+		logger.info("Email sent to notify the users that they have been registered");
 	}
 	
 }

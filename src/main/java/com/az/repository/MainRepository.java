@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -21,6 +22,8 @@ public class MainRepository {
 	@Autowired
 	EmailService emailService;
 	
+	private static final Logger logger = Logger.getLogger(MainRepository.class);
+	
 	protected final JdbcTemplate jdbc;
 	public String query;
 	public MainRepository(JdbcTemplate jdbc){
@@ -34,6 +37,7 @@ public class MainRepository {
 		while(rs.next()){
 			instanceList.add(rs.getString("instance_id"));
 		}
+		logger.info("Instance details retrieved and sent back to controller");
 		return instanceList;
 	}
 
@@ -46,11 +50,11 @@ public class MainRepository {
 			jdbc.update(query, new Object[]{uuid, instance});
 		}
 		
+		logger.info("User Registered");
 		String text = "Hello " +firstName +",\n\n Your information has succesfully been saved along with the instances you have selected for monitoring."
 				+ " We will notify you if there is any change in status of your selected Instances.";
 		
 		emailService.sendMail(email, "Regsitration", text);
-		
 	}
 
 	public void saveInstanceData(InstanceModel[] apiData) {
